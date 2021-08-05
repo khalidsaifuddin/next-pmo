@@ -1,0 +1,6 @@
+.navbar-search > div.input {
+  width: 100%;
+}
+.scrollable-element {
+  scrollbar-width: none;
+}
