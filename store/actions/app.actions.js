@@ -15,6 +15,28 @@ export default function updateWindowDimension()
     }
 }
 
+export async function getWilayah(params, api_base){
+    const request = await axios.get(api_base+'/wilayah_individu/'+params.kode);
+
+    return request
+}
+
+export async function getProvinsi(params, api_base){
+    const request = await axios.get(api_base+'/wilayah/1', {
+        params: params
+    });
+
+    return request
+}
+
+export async function getKabupaten(params, api_base){
+    const request = await axios.get(api_base+'/wilayah/2/'+params.induk_kode, {
+        params: params
+    });
+
+    return request
+}
+
 export async function login(params, api_base){
     const request = await axios.post(api_base+'/masuk', {
         ...params
@@ -46,3 +68,4 @@ export async function getIdentitasPengguna(params, api_base){
 
     return request
 }
+
