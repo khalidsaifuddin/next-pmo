@@ -9,7 +9,7 @@ export default class LayoutNoMenu extends Component {
   }
 
   componentDidMount = () => {
-    console.log(window.location.href.split('/'))
+    // console.log(window.location.href.split('/'))
 
     let urls = window.location.href.split('/')
 

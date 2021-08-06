@@ -33,9 +33,9 @@ export default class CardPenulis extends Component {
               }}></div>
               <div style={{marginLeft:'16px'}}>
                 <h4 style={{marginBottom:'0px'}}>
-                  {penulis.nama}
+                  {penulis && penulis.nama}
                 </h4>
-                <div>@{penulis.username}</div>
+                <div>@{penulis && penulis.username}</div>
                 <div style={{marginTop:'16px'}}>
                   <Icon name='star' /> 0 &nbsp;|&nbsp; <Icon name="book" /> 0 Cerita
                 </div>
@@ -45,10 +45,10 @@ export default class CardPenulis extends Component {
             <Grid.Column width="6" style={{textAlign:'center'}}>
               <Grid>
                 <Grid.Column width={8} style={{textAlign:'center', border:'0px solid #ccc', padding:'8px'}}>
-                  <Icon name="users" /> {selfProfile ? <a href={"/profil/following?pengguna_id="+penulis.pengguna_id}>0 Following</a> : '0 Following'}
+                  <Icon name="users" /> {selfProfile ? <a href={"/profil/following?pengguna_id="+(penulis && penulis.pengguna_id)}>0 Following</a> : '0 Following'}
                 </Grid.Column>
                 <Grid.Column width={8} style={{textAlign:'center', border:'0px solid #ccc', padding:'8px'}}>
-                  <Icon name="users" /> {selfProfile ? <a href={"/profil/follower?pengguna_id="+penulis.pengguna_id}>0 Follower</a> : '0 Follower'}
+                  <Icon name="users" /> {selfProfile ? <a href={"/profil/follower?pengguna_id="+(penulis && penulis.pengguna_id)}>0 Follower</a> : '0 Follower'}
                 </Grid.Column>
                 {!selfProfile &&
                 <Grid.Column width="16" style={{textAlign:'center', border:'0px solid #ccc', padding:'8px'}}>

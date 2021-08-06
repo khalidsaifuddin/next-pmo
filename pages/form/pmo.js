@@ -11,10 +11,58 @@ import NavbarSimple from '../components/NavbarSimple'
 import * as RegistrationActions from '../../store/actions/registration.actions'
 import * as AppActions from '../../store/actions/app.actions'
 
+const setOptionWilayah = (elements) => {
+  let tmpArr = []
+  for (let index = 0; index < elements.length; index++) {
+    const element = elements[index]
+    
+    let arr = {}
+    arr.key = element.kode 
+    arr.value = element.kode 
+    arr.text = element.nama
+
+    tmpArr.push(arr)
+  }
+
+  return tmpArr
+}
+
+export const getServerSideProps = async () => {
+
+  const { data: jenis_pendaftaran } = await RegistrationActions.getJenisPendaftaran({}, config.api_base)
+  const { data: provinsi } = await AppActions.getProvinsi({}, config.api_base)
+
+  console.log(jenis_pendaftaran)
+
+  let JenisPendaftaranOptions = []
+
+  for (let index = 0; index < jenis_pendaftaran.length; index++) {
+    const element = jenis_pendaftaran[index]
+    
+    let arr = {}
+    arr.key = element.ID 
+    arr.value = element.ID 
+    arr.text = element.Nama
+
+    JenisPendaftaranOptions.push(arr)
+  }
+  
+  console.log(provinsi)
+
+  return {
+    props: {
+      jenis_pendaftaran,
+      JenisPendaftaranOptions,
+      provinsi: setOptionWilayah(provinsi)
+    }
+  }
+}
+
 class Pmo extends Component {
   
   state = {
     loading: true,
+    judul: 'Form Pengelola Program Management Office',
     params: {},
     sudah_submit: false,
     arrLoading: [1,2,3,4],
@@ -35,56 +83,7 @@ class Pmo extends Component {
     '#757575'
   ]
 
-  setOptionWilayah = (elements) => {
-    let tmpArr = []
-    for (let index = 0; index < elements.length; index++) {
-      const element = elements[index]
-      
-      let arr = {}
-      arr.key = element.kode 
-      arr.value = element.kode 
-      arr.text = element.nama
-
-      tmpArr.push(arr)
-    }
-
-    return tmpArr
-  }
-
   loadInitialData = () => {
-    RegistrationActions.getJenisPendaftaran(this.state.params, config.api_base).then((result)=>{
-      
-      let JenisPendaftaranOptions = []
-
-      for (let index = 0; index < result.data.length; index++) {
-        const element = result.data[index]
-
-        let arr = {}
-        arr.key = element.ID 
-        arr.value = element.ID 
-        arr.text = element.Nama
-
-        JenisPendaftaranOptions.push(arr)
-        
-      }
-      
-      this.setState({
-        JenisPendaftaranOptions: JenisPendaftaranOptions
-      },()=>{
-        console.log(this.state.JenisPendaftaranOptions)
-      })
-    })
-
-    AppActions.getProvinsi(this.state.params, config.api_base).then((result)=>{
-
-      this.setState({
-        loading: false,
-        provinsi: this.setOptionWilayah(result.data)
-      },()=>{
-        console.log(this.state.provinsi)
-      })
-
-    })
 
     if(this.state.params.kode_provinsi){
       //load records of kabupaten
@@ -93,7 +92,7 @@ class Pmo extends Component {
         this.setState({
           kabupaten: this.setOptionWilayah(result.data)
         },()=>{
-          console.log(this.state.kabupaten)
+          // console.log(this.state.kabupaten)
         })
 
       })
@@ -101,8 +100,6 @@ class Pmo extends Component {
   }
 
   componentDidMount = () => {
-
-    console.log(window.location)
 
     this.setState({
       rootUrl: window.location.origin
@@ -122,15 +119,15 @@ class Pmo extends Component {
         AppActions.getKabupaten({induk_kode: d.value}, config.api_base).then((result)=>{
           
           this.setState({
-            kabupaten: this.setOptionWilayah(result.data)
+            kabupaten: setOptionWilayah(result.data)
           },()=>{
-            console.log(this.state.kabupaten)
+            // console.log(this.state.kabupaten)
           })
 
         })
       }
 
-      console.log(this.state.params)
+      // console.log(this.state.params)
     })
   }
 
@@ -141,15 +138,15 @@ class Pmo extends Component {
         [tipe]: e.currentTarget.value
       }
     },()=>{
-      console.log(this.state.params)
+      // console.log(this.state.params)
     })
   }
 
   TombolSimpan = () => {
     return (
-      <Button size={'large'} type="submit" color={'green'} onClick={this.simpan} loading={this.state.loading}>
+      <Button size={'large'} type="submit" color={'green'} onClick={this.simpan} loading={this.props.loading}>
         <Icon name="save" />
-        {this.state.loading ? 'Menyimpan...' : 'Simpan'}
+        {this.props.loading ? 'Menyimpan...' : 'Simpan'}
       </Button>
     )
   }
@@ -187,47 +184,14 @@ class Pmo extends Component {
     })
   }
 
-  // modals = () => {
-  //   // console.log(this)
-  //   return (
-  //     <Modal
-  //       onClose={() => this.setState({modal_open:false})}
-  //       onOpen={() => this.setState({modal_open:true})}
-  //       open={this.state.modal_open}
-  //     >
-  //       <Modal.Header>Pendaftaran Berhasil</Modal.Header>
-  //       <Modal.Content>
-  //         Data Anda telah tersimpan ke dalam sistem. Silakan akses link di bawah ini untuk melihat hasil isian Anda, atau klik tombol di bawah ini
-  //         <Card>
-  //           <Card.CardContent>
-              
-  //           </Card.CardContent>
-  //         </Card>
-  //       </Modal.Content>
-  //       <Modal.Actions>
-  //         <Button color='black' onClick={() => this.setState({modal_open:false, params:{}})}>
-  //           Tutup dan Kembali ke Form
-  //         </Button>
-  //         <Button
-  //           content="Lihat Hasil Isian"
-  //           labelPosition='right'
-  //           icon='checkmark'
-  //           onClick={()=>this.keHasilIsian(this.state.params)}
-  //           positive
-  //         />
-  //       </Modal.Actions>
-  //     </Modal>
-  //   )
-  // }
-
   keHasilIsian = (params) => {
     // console.log(params)
     window.location.href = "/form/isian_pmo?id="+params.id
   }
 
   render() {
-    const { JenisPendaftaranOptions, provinsi, kabupaten } = this.state
-
+    const { kabupaten } = this.state
+    
     return (
       <div className="container">
         <Modal
@@ -264,18 +228,18 @@ class Pmo extends Component {
         </Head>
         <NavbarSimple />
         <LayoutNoMenu>
-          <h3>Form Pengelola Program Management Office</h3>
+          <h3>{this.state.judul}</h3>
           <br/>
           <Form onSubmit={this.submitForm}>
             <Card fluid>
               <Card.Content>
                 <Form.Field error={this.state.sudah_submit && !this.state.params.jenis_pendaftaran_id}>
                   <label>Jenis Pengelola</label>
-                  <Dropdown value={this.state.params.jenis_pendaftaran_id} fluid selection placeholder='Pilih Jenis Pengelola...' options={JenisPendaftaranOptions} onChange={this.setValueSelect('jenis_pendaftaran_id')} />
+                  <Dropdown value={this.state.params.jenis_pendaftaran_id} fluid selection placeholder='Pilih Jenis Pengelola...' options={this.props.JenisPendaftaranOptions} onChange={this.setValueSelect('jenis_pendaftaran_id')} />
                 </Form.Field>
                 <Form.Field error={this.state.sudah_submit && !this.state.params.kode_provinsi}>
                   <label>Provinsi</label>
-                  <Dropdown value={this.state.params.kode_provinsi} fluid selection placeholder='Pilih Provinsi...' options={provinsi} onChange={this.setValueSelect('kode_provinsi')} />
+                  <Dropdown value={this.state.params.kode_provinsi} fluid selection placeholder='Pilih Provinsi...' options={this.props.provinsi} onChange={this.setValueSelect('kode_provinsi')} />
                 </Form.Field>
                 {this.state.params.jenis_pendaftaran_id === 2 &&
                 <Form.Field error={this.state.sudah_submit && !this.state.params.kode_provinsi}>
@@ -289,27 +253,27 @@ class Pmo extends Component {
               <Card.Content>
                 <Form.Field error={this.state.sudah_submit && !this.state.params.nama}>
                   <label>Nama</label>
-                  <input disabled={this.state.loading} value={this.state.params.nama} placeholder='Nama' onChange={this.setValueField('nama')} />
+                  <input disabled={this.props.loading} value={this.state.params.nama} placeholder='Nama' onChange={this.setValueField('nama')} />
                 </Form.Field>
                 <Form.Field error={this.state.sudah_submit && !this.state.params.lembaga_asal}>
                   <label>Lembaga Asal</label>
-                  <input disabled={this.state.loading} value={this.state.params.lembaga_asal} placeholder='Lembaga Asal' onChange={this.setValueField('lembaga_asal')} />
+                  <input disabled={this.props.loading} value={this.state.params.lembaga_asal} placeholder='Lembaga Asal' onChange={this.setValueField('lembaga_asal')} />
                 </Form.Field>
                 <Form.Field error={this.state.sudah_submit && !this.state.params.peran}>
                   <label>Peran</label>
-                  <input disabled={this.state.loading} value={this.state.params.peran} placeholder='Peran' onChange={this.setValueField('peran')} />
+                  <input disabled={this.props.loading} value={this.state.params.peran} placeholder='Peran' onChange={this.setValueField('peran')} />
                 </Form.Field>
                 <Form.Field error={this.state.sudah_submit && !this.state.params.no_hp}>
                   <label>No.HP (dengan WhatsApp Aktif)</label>
-                  <input type="number" disabled={this.state.loading} value={this.state.params.no_hp} placeholder='No.HP' onChange={this.setValueField('no_hp')} />
+                  <input type="number" disabled={this.props.loading} value={this.state.params.no_hp} placeholder='No.HP' onChange={this.setValueField('no_hp')} />
                 </Form.Field>
                 <Form.Field error={this.state.sudah_submit && !this.state.params.email}>
                   <label>Email</label>
-                  <input disabled={this.state.loading} value={this.state.params.email} placeholder='Email' onChange={this.setValueField('email')} />
+                  <input disabled={this.props.loading} value={this.state.params.email} placeholder='Email' onChange={this.setValueField('email')} />
                 </Form.Field>
                 <Form.Field>
                   <label>Keterangan</label>
-                  <input disabled={this.state.loading} value={this.state.params.keterangan} placeholder='Keterangan' onChange={this.setValueField('keterangan')} />
+                  <input disabled={this.props.loading} value={this.state.params.keterangan} placeholder='Keterangan' onChange={this.setValueField('keterangan')} />
                 </Form.Field>
               </Card.Content>
             </Card>
