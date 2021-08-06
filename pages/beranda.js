@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import main from './_app'
-import { Grid } from 'semantic-ui-react'
+import { Card, Grid } from 'semantic-ui-react'
 import '../styles/global.module.css'
 import 'semantic-ui-css/semantic.min.css'
 import Layout from './components/Layout'
@@ -9,6 +9,7 @@ import * as AppActions from '../store/actions/app.actions'
 import * as CeritaActions from '../store/actions/cerita.actions'
 import * as KategoriActions from '../store/actions/kategori.actions'
 import config from '../config'
+import LayoutNoMenu from './components/LayoutNomenu'
 
 class Beranda extends Component {
   
@@ -41,9 +42,16 @@ class Beranda extends Component {
 
   render() {
     return (
-      <Layout>
-        isi beranda
-      </Layout>
+      <LayoutNoMenu>
+        <h1>Aplikasi PMO</h1>
+        <a href="/form/pmo">
+          <Card>
+            <Card.Content>
+              Form Pengelola PMO
+            </Card.Content>
+          </Card>
+        </a>
+      </LayoutNoMenu>
     )
   }
 }

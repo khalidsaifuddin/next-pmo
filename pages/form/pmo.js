@@ -243,7 +243,7 @@ class Pmo extends Component {
                 </a>
               </Card.Content>
             </Card>
-            Anda bisa menyimpan link ini sewaktu-waktu Anda ingin melakukan perubahan data Anda
+            Anda bisa menyimpan link ini sewaktu-waktu Anda ingin mengecek data Anda
           </Modal.Content>
           <Modal.Actions>
             <Button color='black' onClick={() => this.setState({modal_open:false})}>
@@ -301,7 +301,7 @@ class Pmo extends Component {
                 </Form.Field>
                 <Form.Field error={this.state.sudah_submit && !this.state.params.no_hp}>
                   <label>No.HP (dengan WhatsApp Aktif)</label>
-                  <input disabled={this.state.loading} value={this.state.params.no_hp} placeholder='No.HP' onChange={this.setValueField('no_hp')} />
+                  <input type="number" disabled={this.state.loading} value={this.state.params.no_hp} placeholder='No.HP' onChange={this.setValueField('no_hp')} />
                 </Form.Field>
                 <Form.Field error={this.state.sudah_submit && !this.state.params.email}>
                   <label>Email</label>

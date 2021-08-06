@@ -15,3 +15,9 @@ export async function simpanPendaftaran(params, api_base){
 
   return request
 }
+
+export async function getPendaftaran(params, api_base){
+  const request = await axios.get(api_base+'/registration_individu/'+params.id)
+
+  return request
+}

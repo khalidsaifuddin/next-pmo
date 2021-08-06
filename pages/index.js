@@ -4,6 +4,7 @@ import Beranda from './beranda'
 import Navbar from './components/Navbar'
 import localforage from 'localforage'
 import cekLogin from '../functions/app_functions'
+import NavbarSimple from './components/NavbarSimple'
 
 // export default function Home() {
 class Home extends Component {
@@ -55,10 +56,10 @@ class Home extends Component {
     return (
       <div className="container">
         <Head>
-          <title>KitaCerita</title>
+          <title>PMO</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Navbar searchbar={true} loginButton={true} />
+        <NavbarSimple searchbar={true} loginButton={true} />
         <Beranda />
       </div>
     )
